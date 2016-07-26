@@ -35,7 +35,7 @@ describe 'On start' do
   end
 
   it 'AMQP_Plugged_In publishes valid action messages' do
-    pending('Step 3 - Publish A Valid JSON Message To The Default Exchange')
+    # pending('Step 3 - Publish A Valid JSON Message To The Default Exchange')
 
     amqp_plugged_in_ut.mq_connection_tx = connection_mock
 
@@ -47,6 +47,6 @@ describe 'On start' do
 
     amqp_plugged_in_ut.publish_action_message('i.am.a.routing.key.*', JSON.generate({:hello => 'bye'}))
 
-    assert(false, true)
+    # assert(false, true)
   end
 end

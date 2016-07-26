@@ -45,13 +45,12 @@ class AMQP_Plugged_In
   end
 
   def publish_action_message(routing_key, message)
-    #  mq_connection_tx = Bunny.new
-    #  mq_connection_tx.start
+    mq_connection_tx = Bunny.new
+    mq_connection_tx.start
     mq_channel_tx = mq_connection_tx.create_channel
     mq_exchange_tx = mq_channel_tx.default_exchange
     mq_exchange_tx.publish(message, :headers => {'type' => 'action'}, :routing_key => routing_key)
-
-    #  mq_connection_tx.close
+    mq_connection_tx.close
   end
 
 end
