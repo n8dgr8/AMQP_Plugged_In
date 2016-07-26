@@ -13,7 +13,7 @@ describe 'On start' do
   it 'AMQP_Plugged_In connects to the exchange' do
     expect(connection_mock).to receive(:start)
     expect(connection_mock).to receive(:create_channel).and_return(channel_mock)
-    expect(channel_mock).to receive(:topic).with('event').and_return(exchange_mock)
+    expect(channel_mock).to receive(:topic).with('Event', {:durable=>true}).and_return(exchange_mock)
     expect(channel_mock).to receive(:queue).with('', {:exclusive => true} ).and_return(queue_mock)
     amqp_plugged_in_ut.connect(connection_mock)
   end
@@ -29,13 +29,13 @@ describe 'On start' do
     amqp_plugged_in_ut.mq_queue_rx = queue_mock
     amqp_plugged_in_ut.mq_exchange_rx = exchange_mock
 
-    expect(queue_mock).to receive(:bind).with(exchange_mock, :routing_key => 'YOUR.ROUTING.KEY.HERE.*')
+    expect(queue_mock).to receive(:bind).with(exchange_mock, :routing_key => 'your_event_key_here')
 
-    amqp_plugged_in_ut.bind_queue('barf')
+    amqp_plugged_in_ut.go
   end
 
   it 'AMQP_Plugged_In publishes valid action messages' do
-    # pending('Step 3 - Publish A Valid JSON Message To The Default Exchange')
+    pending('Step 3 - Publish A Valid JSON Message To The Default Exchange')
 
     amqp_plugged_in_ut.mq_connection_tx = connection_mock
 
@@ -43,9 +43,9 @@ describe 'On start' do
     allow(channel_mock).to receive(:default_exchange).and_return(exchange_mock)
 
     expect(exchange_mock).to receive(:publish).with(
-        '{"hello":"bye"}', {:headers=>{'type' => 'action'}, :routing_key => 'i.am.a.routing.key.*'})
+        '{}', {:headers=>{'type' => 'action'}, :routing_key => 'your_routing_key_here'})
 
-    amqp_plugged_in_ut.publish_action_message('i.am.a.routing.key.*', JSON.generate({:hello => 'bye'}))
+    amqp_plugged_in_ut.publish_action_message('your_routing_key_here', JSON.generate({}))
 
     # assert(false, true)
   end
