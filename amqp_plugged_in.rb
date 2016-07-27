@@ -20,7 +20,6 @@ class AMQP_Plugged_In
     @mq_exchange_rx = mq_channel_rx.topic('Event', :durable => true)
     @mq_queue_rx = mq_channel_rx.queue('', :exclusive => true)
 
-
   end
 
   def bind_queue(routing_key)
@@ -29,7 +28,7 @@ class AMQP_Plugged_In
 
   def wait_for_message
     begin
-      @mq_queue_rx.subscribe(:block => true) do |_, _, message_body|
+      @mq_queue_rx.subscribe(:block => true) do |_, _, message_body| do
         handle_message(message_body)
       end
     rescue Interrupt => _
